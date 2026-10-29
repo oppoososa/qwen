@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% set active_nav = 'lists' %}
+{% block title %}Новый справочник — Конструктор форм{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Создание справочника</h2>
+    <form method="post" action="{{ url_for('custom_list_new') }}">
+        <div class="field-row">
+            <label for="name">Название (латиница, с буквы: ^[a-z][a-z0-9_]+$)</label><br>
+            <input type="text" id="name" name="name" class="form-input" required
+                   pattern="[a-z][a-z0-9_]+" placeholder="dolzhnosti">
+        </div>
+        <button type="submit" class="btn primary">Создать</button>
+        <a class="btn" href="{{ url_for('lists_page') }}">Отмена</a>
+    </form>
+</div>
+{% endblock %}

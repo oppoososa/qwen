@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% set active_nav = 'form' %}
+{% block title %}Заполнение формы — Конструктор форм{% endblock %}
+
+{% block content %}
+{% if template is none %}
+<div class="card empty-state">
+    <h2>Шаблоны ещё не загружены</h2>
+    <p>Загрузите шаблон формы в формате DOCX или ODT, чтобы начать работу.</p>
+    <a class="btn primary" href="{{ url_for('templates_page') }}">Загрузить первый шаблон</a>
+</div>
+{% else %}
+<div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center;" class="no-print">
+        <h2 style="margin:0;">Шаблон: {{ template['name'] }}</h2>
+        <a class="btn" href="{{ url_for('templates_page') }}">Сменить шаблон</a>
+    </div>
+</div>
+
+<form id="main-form" method="post" action="{{ url_for('save') }}">
+<input type="hidden" name="form_id" value="{{ form_id if form_id else '' }}">
+<div class="card doc-area">
+    {{ body_html | safe }}
+</div>
+
+<div class="card no-print">
+    <div class="button-bar" style="margin-top:0;">
+        <button type="submit" class="btn primary">Сохранить</button>
+        <button type="button" class="btn" onclick="window.print()">Печать</button>
+        <button type="button" class="btn" onclick="downloadDocx()">Скачать DOCX</button>
+        <button type="button" class="btn" onclick="clearForm(this.form)">Очистить</button>
+    </div>
+</div>
+</form>
+
+<script>
+// Скачивание DOCX: отправляем поля текущей формы на /download_docx
+function downloadDocx() {
+    var src = document.getElementById('main-form');
+    var f = document.createElement('form');
+    f.method = 'POST';
+    f.action = '{{ url_for("download_docx") }}';
+    f.style.display = 'none';
+    Array.prototype.forEach.call(src.elements, function(el) {
+        if (!el.name || el.name === 'form_id') return;
+        if (el.type === 'select-multiple' || el.type === 'checkbox' && !el.checked) return;
+        var clone = el.cloneNode(true);
+        if (el.tagName === 'SELECT') {
+            Array.prototype.forEach.call(el.options, function(o, i) {
+                clone.options[i].selected = o.selected;
+            });
+        }
+        if (el.tagName === 'TEXTAREA') clone.value = el.value;
+        f.appendChild(clone);
+    });
+    document.body.appendChild(f);
+    f.submit();
+}
+function clearForm(form) {
+    Array.prototype.forEach.call(form.elements, function(el) {
+        if (el.name === 'form_id') return;
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.value = '';
+        if (el.tagName === 'SELECT') el.selectedIndex = 0;
+    });
+}
+</script>
+{% endif %}
+{% endblock %}

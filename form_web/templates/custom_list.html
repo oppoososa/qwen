@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% set active_nav = 'lists' %}
+{% block title %}{{ cl['name'] }} — Конструктор форм{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Справочник «{{ cl['name'] }}»</h2>
+    <form method="post">
+        <div class="field-row">
+            <label for="value">Новое значение</label><br>
+            <input type="text" id="value" name="value" class="form-input" required>
+        </div>
+        <button type="submit" class="btn primary">Добавить</button>
+        <a class="btn" href="{{ url_for('lists_page') }}">К справочникам</a>
+    </form>
+</div>
+
+<div class="card">
+    {% if values|length == 0 %}
+    <p class="muted">Значений нет.</p>
+    {% else %}
+    <table class="grid">
+        <thead><tr><th>Значение</th><th>Действия</th></tr></thead>
+        <tbody>
+        {% for v in values %}
+            <tr>
+                <td>{{ v['value'] }}</td>
+                <td>
+                    <form class="inline" method="post" action="{{ url_for('custom_value_delete', vid=v['id']) }}"
+                          onsubmit="return confirm('Удалить значение?');">
+                        <button type="submit" class="btn small danger">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}

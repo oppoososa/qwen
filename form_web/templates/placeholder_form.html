@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% set active_nav = 'placeholders' %}
+{% block title %}{{ 'Изменение поля' if ph else 'Новое поле' }} — Конструктор форм{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>{{ 'Изменение поля' if ph else 'Новое поле' }}</h2>
+    <form method="post">
+        {% set f = form if form else (ph if ph else none) %}
+        <div class="field-row">
+            <label for="key">Key (имя плейсхолдера в шаблоне, {{ '{{...}}' }})</label><br>
+            <input type="text" id="key" name="key" class="form-input" required
+                   value="{{ f['key'] if f else '' }}" pattern="[a-z][a-z0-9_]{1,30}"
+                   title="Строчные латинские буквы, цифры и _; начинается с буквы">
+            <div class="muted">Шаблон: ^[a-z][a-z0-9_]{1,30}$</div>
+        </div>
+        <div class="field-row">
+            <label for="label">Название (label)</label><br>
+            <input type="text" id="label" name="label" class="form-input" required
+                   value="{{ f['label'] if f else '' }}">
+        </div>
+        <div class="field-row">
+            <label for="type">Тип поля</label><br>
+            <select id="type" name="type" class="form-input" onchange="toggleSource(this.value)">
+                {% for t in ['text','date','number','select','textarea'] %}
+                <option value="{{ t }}" {{ 'selected' if f and f['type']==t }}>{{ t }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="field-row" id="source-row">
+            <label for="source">Источник значений (только для select)</label><br>
+            <select id="source" name="source" class="form-input">
+                <option value="">— без источника —</option>
+                <option value="persons" {{ 'selected' if f and f['source']=='persons' }}>persons (ФИО)</option>
+                <option value="addresses" {{ 'selected' if f and f['source']=='addresses' }}>addresses (Адреса)</option>
+                {% for cl in custom_lists %}
+                <option value="list:{{ cl['id'] }}" {{ 'selected' if f and f['source']=='list:'+string(cl['id']) }}>
+                    {{ cl['name'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="field-row">
+            <label><input type="checkbox" name="required" value="1" {{ 'checked' if f and f['required'] }}> Обязательное</label><br>
+            <label><input type="checkbox" name="bold" value="1" {{ 'checked' if f and f['bold'] }}> Жирный (выделять label)</label>
+        </div>
+        <div class="field-row">
+            <label for="sort_order">Порядок сортировки</label><br>
+            <input type="number" id="sort_order" name="sort_order" class="form-input"
+                   value="{{ f['sort_order'] if f else 0 }}">
+        </div>
+        <div class="button-bar" style="margin-top:0;">
+            <button type="submit" class="btn primary">Сохранить</button>
+            <a class="btn" href="{{ url_for('placeholders_page') }}">Отмена</a>
+        </div>
+    </form>
+</div>
+
+<script>
+// Скрываем источник, если тип поля не select
+function toggleSource(type) {
+    document.getElementById('source-row').style.display = (type === 'select') ? '' : 'none';
+}
+toggleSource(document.getElementById('type').value);
+</script>
+{% endblock %}

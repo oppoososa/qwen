@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% set active_nav = 'lists' %}
+{% block title %}Справочники — Конструктор форм{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Справочники</h2>
+    <table class="grid">
+        <thead><tr><th>Название</th><th>Записей</th><th></th></tr></thead>
+        <tbody>
+        <tr>
+            <td>ФИО (persons)</td>
+            <td>{{ persons|length }}</td>
+            <td><a class="btn small" href="{{ url_for('persons_page') }}">Открыть</a></td>
+        </tr>
+        <tr>
+            <td>Адреса (addresses)</td>
+            <td>{{ addresses|length }}</td>
+            <td><a class="btn small" href="{{ url_for('addresses_page') }}">Открыть</a></td>
+        </tr>
+        {% for cl in custom_lists %}
+        <tr>
+            <td>{{ cl['name'] }}</td>
+            <td>{{ cl['cnt'] }}</td>
+            <td>
+                <a class="btn small" href="{{ url_for('custom_list_page', lid=cl['id']) }}">Открыть</a>
+                <form class="inline" method="post" action="{{ url_for('custom_list_delete', lid=cl['id']) }}"
+                      onsubmit="return confirm('Удалить справочник и все его значения?');">
+                    <button type="submit" class="btn small danger">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="button-bar">
+        <a class="btn primary" href="{{ url_for('custom_list_new') }}">Создать справочник</a>
+    </div>
+</div>
+{% endblock %}
