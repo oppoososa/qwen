@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% set active_nav = 'templates' %}
+{% block title %}Шаблоны — Конструктор форм{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Загрузка нового шаблона</h2>
+    <form method="post" action="{{ url_for('upload_template') }}" enctype="multipart/form-data">
+        <div class="field-row">
+            <label for="file">Файл шаблона (.docx или .odt)</label><br>
+            <input type="file" id="file" name="file" accept=".docx,.odt" required class="form-input">
+        </div>
+        <div class="field-row">
+            <label for="name">Название шаблона (необязательно)</label><br>
+            <input type="text" id="name" name="name" class="form-input">
+        </div>
+        <button type="submit" class="btn primary">Загрузить</button>
+    </form>
+    <p class="muted">Максимальный размер файла — 10 МБ. Для .odt требуется установленный LibreOffice.</p>
+</div>
+
+<div class="card">
+    <h2>Список шаблонов</h2>
+    {% if templates|length == 0 %}
+    <p class="muted">Шаблонов пока нет.</p>
+    {% else %}
+    <table class="grid">
+        <thead>
+            <tr><th>Название</th><th>Исходный файл</th><th>Дата</th><th>Статус</th><th>Действия</th></tr>
+        </thead>
+        <tbody>
+        {% for t in templates %}
+            <tr>
+                <td>{{ t['name'] }}</td>
+                <td>{{ t['original_filename'] or '—' }}</td>
+                <td>{{ t['created_at'] }}</td>
+                <td>{% if t['is_active'] %}<span class="badge active">активный</span>{% else %}<span class="badge">—</span>{% endif %}</td>
+                <td>
+                    {% if not t['is_active'] %}
+                    <form class="inline" method="post" action="{{ url_for('activate_template', tid=t['id']) }}">
+                        <button type="submit" class="btn small">Активировать</button>
+                    </form>
+                    {% endif %}
+                    <a class="btn small" href="{{ url_for('download_template_source', tid=t['id']) }}">Скачать исходный DOCX</a>
+                    <form class="inline" method="post" action="{{ url_for('delete_template_route', tid=t['id']) }}"
+                          onsubmit="return confirm('Удалить шаблон и его файлы?');">
+                        <button type="submit" class="btn small danger">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}

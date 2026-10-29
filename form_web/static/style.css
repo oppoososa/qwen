@@ -1,0 +1,176 @@
+/* static/style.css — интерфейс в стиле Windows 11 (Fluent), без фреймворков */
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', 'DejaVu Sans', sans-serif;
+    font-size: 14px;
+    color: #1A1A1A;
+    background: #F3F3F3;
+}
+
+a { color: #0078D4; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ---------- Шапка ---------- */
+header.topbar {
+    background: #FFFFFF;
+    border-bottom: 1px solid #E0E0E0;
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+header.topbar .app-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1A1A1A;
+}
+nav.mainnav { display: flex; gap: 4px; flex-wrap: wrap; }
+nav.mainnav a {
+    padding: 6px 12px;
+    color: #1A1A1A;
+    border-radius: 4px;
+    text-decoration: none;
+}
+nav.mainnav a:hover { background: #E5F1FB; text-decoration: none; }
+nav.mainnav a.active {
+    color: #0078D4;
+    font-weight: 600;
+    border-bottom: 2px solid #0078D4;
+    border-radius: 4px 4px 0 0;
+}
+
+/* ---------- Карточка контента ---------- */
+main.content {
+    max-width: 960px;
+    margin: 24px auto;
+    padding: 0 16px;
+}
+.card {
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+}
+.card h1, .card h2 { margin-top: 0; font-weight: 600; }
+.muted { color: #616161; }
+
+/* ---------- Flash-сообщения ---------- */
+.flash-area { max-width: 960px; margin: 16px auto 0; padding: 0 16px; }
+.flash {
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    border: 1px solid transparent;
+}
+.flash.success { background: #DFF6DD; border-color: #B7E4B4; color: #14561C; }
+.flash.error   { background: #FDE7E9; border-color: #F3B7BD; color: #7A1322; }
+
+/* ---------- Поля ввода ---------- */
+.form-input, input[type="text"], input[type="date"], input[type="number"],
+select, textarea {
+    background: #FFFFFF;
+    border: 1px solid #ADADAD;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #1A1A1A;
+    max-width: 100%;
+}
+.form-input:focus, input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #0078D4;
+    box-shadow: 0 0 0 2px rgba(0,120,212,.25);
+}
+.form-input.unregistered {
+    border-style: dashed;
+    border-color: #C42B1C;
+    background: #FFFDF5;
+}
+label { display: inline-block; margin-bottom: 4px; font-weight: 600; }
+.field-row { margin-bottom: 14px; }
+.field-row .form-input { width: 320px; }
+textarea.form-input { min-height: 70px; width: 480px; }
+
+/* ---------- Кнопки ---------- */
+.btn {
+    background: #E1E1E1;
+    border: 1px solid #ADADAD;
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #1A1A1A;
+    cursor: pointer;
+}
+.btn:hover { background: #E5F1FB; }
+.btn:active { background: #CCE4F7; }
+.btn.primary {
+    background: #0078D4;
+    color: #FFFFFF;
+    border-color: #0078D4;
+}
+.btn.primary:hover { background: #106EBE; }
+.btn.danger { color: #C42B1C; }
+.btn.danger:hover { background: #FDE7E9; border-color: #C42B1C; }
+.btn.small { padding: 3px 10px; font-size: 13px; }
+.button-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; }
+
+/* ---------- Таблицы ---------- */
+table.grid {
+    width: 100%;
+    border-collapse: collapse;
+    background: #FFFFFF;
+}
+table.grid th {
+    background: #F3F3F3;
+    text-align: left;
+    font-weight: 600;
+    padding: 8px 10px;
+    border-bottom: 1px solid #E0E0E0;
+}
+table.grid td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #E0E0E0;
+    vertical-align: middle;
+}
+table.grid tbody tr:hover { background: #F9F9F9; }
+table.grid form.inline { display: inline; }
+
+/* ---------- Заполненная форма (область документа) ---------- */
+.doc-area { line-height: 1.9; }
+.doc-area p { margin: 6px 0; }
+.badge {
+    display: inline-block;
+    background: #EBEBEB;
+    border: 1px solid #D6D6D6;
+    border-radius: 4px;
+    padding: 1px 8px;
+    font-size: 12px;
+    color: #444;
+}
+.badge.active { background: #DFF6DD; border-color: #B7E4B4; color: #14561C; }
+
+.empty-state { text-align: center; padding: 40px 0; color: #616161; }
+
+/* ---------- Печать: A4, только документ ---------- */
+@media print {
+    @page { size: A4; margin: 15mm; }
+    header.topbar, nav.mainnav, .flash-area, .button-bar,
+    .no-print, footer { display: none !important; }
+    body { background: #FFFFFF; font-size: 12pt; }
+    main.content { max-width: none; margin: 0; padding: 0; }
+    .card { border: none; box-shadow: none; padding: 0; background: #FFFFFF; }
+    .doc-area section, .doc-area table { page-break-inside: avoid; }
+    .form-input, input, select, textarea {
+        border: none; background: transparent; box-shadow: none;
+        font-size: 12pt; padding: 0;
+    }
+    /* у select при печати показываем выбранное значение текстом невозможно —
+       оставляем стандартный вывод браузера */
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Конструктор форм{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar no-print">
+    <span class="app-title">Конструктор форм</span>
+    <nav class="mainnav">
+        <a href="{{ url_for('index') }}" class="{{ 'active' if active_nav == 'form' }}">Форма</a>
+        <a href="{{ url_for('load') }}" class="{{ 'active' if active_nav == 'load' }}">Загрузить</a>
+        <a href="{{ url_for('lists_page') }}" class="{{ 'active' if active_nav == 'lists' }}">Списки</a>
+        <a href="{{ url_for('placeholders_page') }}" class="{{ 'active' if active_nav == 'placeholders' }}">Поля формы</a>
+        <a href="{{ url_for('templates_page') }}" class="{{ 'active' if active_nav == 'templates' }}">Шаблоны</a>
+    </nav>
+</header>
+
+<div class="flash-area no-print">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for cat, msg in messages %}
+        <div class="flash {{ cat if cat in ('success','error') else 'success' }}">{{ msg }}</div>
+        {% endfor %}
+    {% endwith %}
+</div>
+
+<main class="content">
+{% block content %}{% endblock %}
+</main>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% set active_nav = 'placeholders' %}
+{% block title %}Поля формы — Конструктор форм{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2 style="margin:0;">Реестр полей формы</h2>
+        <a class="btn primary" href="{{ url_for('placeholder_new') }}">Добавить поле</a>
+    </div>
+</div>
+
+<div class="card">
+    {% if placeholders|length == 0 %}
+    <p class="muted">Полей нет. Добавьте первое поле.</p>
+    {% else %}
+    <table class="grid">
+        <thead>
+            <tr><th>Key</th><th>Название</th><th>Тип</th><th>Источник</th><th>Обяз.</th><th>Жирн.</th><th>Порядок</th><th>Действия</th></tr>
+        </thead>
+        <tbody>
+        {% for p in placeholders %}
+            <tr>
+                <td><code>{{ p['key'] }}</code></td>
+                <td>{{ p['label'] }}</td>
+                <td>{{ p['type'] }}</td>
+                <td>{{ p['source'] or '—' }}</td>
+                <td>{{ 'да' if p['required'] else 'нет' }}</td>
+                <td>{{ 'да' if p['bold'] else 'нет' }}</td>
+                <td>{{ p['sort_order'] }}</td>
+                <td>
+                    <a class="btn small" href="{{ url_for('placeholder_edit', pid=p['id']) }}">Изменить</a>
+                    <form class="inline" method="post" action="{{ url_for('placeholder_delete', pid=p['id']) }}"
+                          onsubmit="return confirm('Удалить поле? В шаблоне оно станет незарегистрированным.');">
+                        <button type="submit" class="btn small danger">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}
